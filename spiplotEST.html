@@ -1,0 +1,190 @@
+<html>
+    <title>SPIDER PLOT</title>
+    <head>
+        <legend>SPIDER PLOT GENERATOR</legend>
+        <link rel="stylesheet" href="spiplot.css">
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script> <!-- the code works only when scripts are imported in the head tag -->
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-dragdata@latest/dist/chartjs-plugin-dragdata.min.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class = 'dataTB'>
+                <legend>INPUT DATA</legend><br/>
+                <table id="inputTB">
+                    <thead>
+                        <tr>
+                            <td scope="col">CHANNEL</td>
+                            <td scope="col">KEY NAME</td>
+                            <td scope="col">MIN FLOWRATE</td>
+                            <td scope="col">MAX FLOWRATE</td>
+                            <td scope="col">ADJUSTED MAX FLOWRATE</td>
+                            <td scope="col">PRIMARY DESCRIPTOR</td>
+                            <td scope="col">SECONDARY DESCRIPTOR</td>
+                            <td scope="col">THIRD DESCRIPTOR</td>
+                            <td scope="col">SECONDARY NEEDED?(Y/N)</td>
+                            <td scope="col">AROMA 1</td>
+                            <td scope="col">AROMA 2</td>
+                            <td scope="col">AROMA 3</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td scope="row">1.</td>
+                            <td>Mascarpone Flavour</td>
+                            <td>7</td>
+                            <td>130</td>
+                            <td>130</td>
+                            <td>Butter Vanilla</td>
+                            <td>Creamy Dairy</td>
+                            <td>Creamy</td>
+                            <td>Y</td>
+                            <td>56</td>
+                            <td>10</td>
+                            <td>111</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">2.</td>
+                            <td>Vanilla Key</td>
+                            <td>30</td>
+                            <td>400</td>
+                            <td>400</td>
+                            <td>Vanillin</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>N</td>
+                            <td>46</td>
+                            <td>225</td>
+                            <td>91</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">3.</td>
+                            <td>Long Chain Fatty Acid Key</td>
+                            <td>30</td>
+                            <td>400</td>
+                            <td>400</td>
+                            <td>Fatty</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>N</td>
+                            <td>330</td>
+                            <td>97</td>
+                            <td>64</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">4.</td>
+                            <td>Lactoney Key</td>
+                            <td>30</td>
+                            <td>180</td>
+                            <td>180</td>
+                            <td>Creamy</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>N</td>
+                            <td>170</td>
+                            <td>120</td>
+                            <td>45</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">5.</td>
+                            <td>Buttery Key</td>
+                            <td>10</td>
+                            <td>230</td>
+                            <td>230</td>
+                            <td>Buttery</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>N</td>
+                            <td>60</td>
+                            <td>70</td>
+                            <td>180</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">6.</td>
+                            <td>Mid Fatty Acids</td>
+                            <td>35</td>
+                            <td>400</td>
+                            <td>400</td>
+                            <td>Fatty</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>N</td>
+                            <td>160</td>
+                            <td>140</td>
+                            <td>53</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">7.</td>
+                            <td>Sulfury Cooked Dairy </td>
+                            <td>10</td>
+                            <td>60</td>
+                            <td>60</td>
+                            <td>Milky</td>
+                            <td>Spoiled Dairy</td>
+                            <td>-</td>
+                            <td>Y</td>
+                            <td>12</td>
+                            <td>30</td>
+                            <td>34</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">8.</td>
+                            <td>Cheesy Key</td>
+                            <td>10</td>
+                            <td>120</td>
+                            <td>120</td>
+                            <td>Cheesy</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>N</td>
+                            <td>10</td>
+                            <td>100</td>
+                            <td>45</td>
+                        </tr>                        
+                    </tbody>
+                </table>
+                <button type="button" id="addrow">ADD DATA</button>
+                <button type="button" id="addcol">ADD COLUMN</button>
+                <button type="button" id="delrow">DELETE ROW</button>
+                <button type="button" id="delcol">DELETE COLUMN</button>
+                <button type="button" id="plot">PLOT GRAPH</button>
+                <button id="btnExportToCsv" type="button" class="button">Export to CSV</button>
+    <script>
+        const dataTable = document.getElementById("inputTB");
+        const btnExportToCsv = document.getElementById("btnExportToCsv");
+
+        btnExportToCsv.addEventListener("click", () => {
+            const exporter = new TableCSVExporter(dataTable);
+            const csvOutput = exporter.convertToCSV();
+            const csvBlob = new Blob([csvOutput], { type: "text/csv" });
+            const blobUrl = URL.createObjectURL(csvBlob);
+            const anchorElement = document.createElement("a");
+
+            anchorElement.href = blobUrl;
+            anchorElement.download = "table-export.csv";
+            anchorElement.click();
+
+            setTimeout(() => {
+                URL.revokeObjectURL(blobUrl);
+            }, 500);
+        });
+    </script>
+            </div>
+            <div class='spiPLOT'>
+                <legend>SPIDER PLOT</legend><br/>
+                <canvas id="spiPLOT" width=90% height=90%></canvas>
+            </div>
+        </div>
+
+        <!-- <script src="D:/spiplot 1/src/node_modules/read-excel-file/modules/readXlsx.js"></script> -->
+        <!-- <script src="D:/spiplot 1/src/node_modules/chart.js/dist/Chart.js"></script> -->
+        <script src='spiplotEST.js'></script>
+        <script src='TableCSVExporter.js'></script>
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-dragdata@latest/dist/chartjs-plugin-dragdata.min.js"></script> <!-- to make chart.js draggable -->
+        <style src="'D:/spiplot 1/src/spiplot.css'"></style>
+        <!-- <script src="D:/spiplot 1/src/node_modules/chartjs-plugin-dragdata/dist/chartjs-plugin-dragdata.min.js"></script> --> <!-- to make chart.js draggable -->
+
+    </body>
+</html>
